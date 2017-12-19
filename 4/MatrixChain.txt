@@ -1,0 +1,63 @@
+//2012003675 ÀÓ¿µ¼ö
+#include <stdio.h>
+#include <stdlib.h>
+
+int A=1;
+
+void PrintParens(int **s, int i, int j){
+	if(i==j)
+		printf("%d", i);
+	else{
+		printf("( ");
+		PrintParens(s, i, s[i][j]);
+		PrintParens(s, s[i][j]+1, j);
+		printf(") ");
+	}
+	return;
+}
+
+int main(){
+	int *p;
+	int **m;
+	int **s;
+	int n;
+	int i, j, k, l, q;
+
+	scanf("%d", &n);
+
+	p=(int*)malloc(sizeof(int)*(n+1));
+	m=(int**)malloc(sizeof(int*)*(n+1)*(n+1));
+	s=(int**)malloc(sizeof(int*)*(n+1)*(n+1));
+
+	for(i=0; i<n+1; i++){
+		m[i] = (int*)malloc(sizeof(int*)*(n+1));
+		s[i] = (int*)malloc(sizeof(int*)*(n+1));
+	}
+
+	p[0]=0;
+	for(i=0; i<=n; i++){
+		scanf("%d", &p[i]);
+	}
+
+	for(i=1; i<=n; i++){
+		m[i][i] = 0;
+	}
+	for(l=2; l<=n; l++){
+		for(i=1; i<n-l+2; i++){
+			j=i+l-1;
+			m[i][j] = 999999;
+			for(k=i; k<j; k++){
+				q = m[i][k] + m[k+1][j] + p[i-1]*p[k]*p[j];
+				if(q<m[i][j]){
+					m[i][j]=q;
+					s[i][j]=k;
+				}
+			}
+		}
+	}
+
+	printf("%d\n", m[1][n]);
+	PrintParens(s, 1, n);
+
+	return 0;
+}
